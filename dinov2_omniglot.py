@@ -77,4 +77,32 @@ model.fit(X_train, y_train)
 test_acc = model.score(X_test, y_test)
 print(f'Test accuracy: {test_acc}')
 
+#%% Use the model
+from PIL import Image
 
+def preprocess_image(image_path, transform):
+    img = Image.open(image_path)
+    #img = img.convert('RGB')
+    img = transform(img)
+    return img
+
+def predict_class(image_path, model, dinov2, transform):
+    img = preprocess_image(image_path, transform)
+    img = img.unsqueeze(0).to(device)
+    
+    with torch.no_grad():
+        embedding = dinov2(img)
+    
+    prediction = model.predict(embedding.cpu().numpy())
+    return prediction[0]
+
+image_path = r".\omniglot\omniglot-py\images_background\Grantha\character02\0352_02.png"
+transform = transforms.Compose([
+    transforms.Grayscale(num_output_channels=3),
+    transforms.ToTensor(), 
+    transforms.Resize((98, 98))
+])
+
+#Va retourner 382
+predicted_class = predict_class(image_path, model, dinov2, transform)
+print(f"Predicted class: {predicted_class}")
