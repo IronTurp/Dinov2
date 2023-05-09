@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Tue May  9 08:39:48 2023
-
-@author: jeanfrancois.turpin
-"""
 
 # Import required libraries
 import torch
